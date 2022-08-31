@@ -23,35 +23,41 @@
 #include <stdio.h>
 #define UINT unsigned int
 
-struct Vertex {
-    char key;
-    char prev;
-    unsigned int cost;
-    unsigned int visited;
-}
-
 int main(void){
-    int[][] map = {{ 0, 4, 2,  0, 0,  0},
+    //Adjacency matrix
+    int map[6][6] = {{ 0, 4, 2,  0, 0,  0},
                    { 4, 0, 1,  5, 0,  0},
                    { 2, 1, 0,  8, 10, 0},
                    { 0, 5, 8,  0, 2,  6},
                    { 0, 0, 10, 2, 0,  3},
                    { 0, 0, 0,  6, 3,  0}  };
 
-    char[] nodes   = {'A', 'B', 'C', 'D', 'E', 'F'};
-    int[]  visited = {0,0,0,0,0,0};
-    char[] prev    = {'-', '-', '-', '-', '-', '-'};
-    int SIZE = map[0] / map[0][0];
+    //Diplay these arrays for final output
+    char a_nodes[6]   = {'A', 'B', 'C', 'D', 'E', 'F'};
+    char a_prev[6]    = {'-', '-', '-', '-', '-', '-'};
 
-    UINT i; 
-    for (i = 0; i < SIZE; i++){
-        
-    }
+    //Size of data
+    int SIZE = sizeof map[0] / sizeof map[0][0];
 
-    int x,y;
+    UINT prev = 0, cur = 0;
+    int y;
     for (y=0; y < SIZE; y++){
-        for (x=0; x < SIZE; x++){
+        //determine what node is closest
+        UINT closest;
+        {//Scope this logic for mem purposes
+            UINT weight = 9999999;
+            UINT x;
+            for (x=0; x<SIZE; x++){
+                if (map[cur][x] < weight){
+                    closest = x;
+                    weight = map[cur][x];
+                }
+            }
         }
+        printf("%i", closest);
+        
+        //set prev to cur
+        //set cur to closest node
     }
 }
 
