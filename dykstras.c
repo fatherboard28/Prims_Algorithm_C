@@ -1,11 +1,19 @@
+/* 
+   Jonathan Cunningham | Sep 1 2022
+   -- dijkstras algorithm --
+   Requirments:
+    -map to be populated before running
+   Restrictions:
+    -map cannot be more than a 26x26
+*/
+
 #include <stdio.h>
 #define UINT unsigned int
 
-
 //Alphabet array
 const char letters[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
-                  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                  'U', 'V', 'W', 'X', 'Y', 'Z'};
+                      'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+                      'U', 'V', 'W', 'X', 'Y', 'Z'};
 
 //Adjacency matrix
 int map[5][5] = {{0, 4, 12, 0, 11},
