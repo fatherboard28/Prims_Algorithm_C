@@ -8,7 +8,6 @@
 */
 
 #include <stdio.h>
-#define UINT unsigned int
 
 //Alphabet array
 const char letters[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
@@ -16,75 +15,79 @@ const char letters[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
                       'U', 'V', 'W', 'X', 'Y', 'Z'};
 
 //Adjacency matrix
-int map[5][5] = {{0, 4, 12, 0, 11},
-                 {4, 0, 0, 3, 7},
-                 {12, 0, 0, 2, 1},
-                 {0, 3, 2, 0, 4},
-                 {12, 7, 1, 4, 0}};
+int map[6][6] = {{0, 3, 5, 0, 0, 0},
+                 {3, 0, 0, 0, 0, 0},
+                 {5, 0, 0, 7, 4, 0},
+                 {0, 0, 7, 0, 1, 0},
+                 {0, 0, 4, 1, 0, 4},
+                 {0, 0, 0, 0, 4, 0}};
 
 //Size of data
 const int SIZE = sizeof map[0] / sizeof map[0][0];
 
 //Struct for print values
 struct Vals{
-    char nodes[SIZE];
     char prev[SIZE];
-    UINT cost[SIZE];
+    int cost[SIZE];
 };
 
 struct Vals dijkstras(int map[SIZE][SIZE]){
     //Diplay these arrays for final output
-    char a_nodes[SIZE];
     char a_prev[SIZE]; 
-    UINT a_cost[SIZE]; 
+    int a_cost[SIZE]; 
+    int a_unvisited[SIZE];
 
     //populating display arrays
-    UINT i;
+    int i;
     for (i=0; i < SIZE; i++){
-        a_nodes[i] = letters[i];
         a_prev[i] = '-';
-        a_cost[i] = 0;
+        a_cost[i] = 99999;
+        a_unvisited[i] = i;
     }
 
-    //main algorithm
-    UINT cur = 0;
-    int y;
-    for (y=0; y < SIZE; y++){
 
-        //determine what node is closest
-        // - requires cur to be on the correct node
-        UINT closest;
-        {   //Scope this logic for mem purposes
-            UINT weight = -1;
-            UINT x;
-            for (x=0; x<SIZE; x++){
-                if ((map[cur][x] < weight || weight == -1) && map[cur][x] != 0){
-                    closest = x;
-                    weight = map[cur][x];
+    //main algorithm
+    int node;
+    int count;
+    for (count = 0; count < SIZE; count++){
+        //Gets current working node
+        int weight = 99999;
+        for(i=SIZE-1; i > -1; i--){
+            if (a_unvisited[i] != -1 && a_cost[i] <= weight){
+                weight = a_cost[i];
+                node = i;
+            }
+        }
+
+        //updating a_unvisited to exlude current node
+        a_unvisited[node] = -1;
+
+        //setting cost to get to node 0 to 0
+        a_cost[0] = 0;
+
+        //looping through all connections of node to find any new shortest
+        //paths to a node
+        for (i=0; i < SIZE; i++){
+            if (map[node][i]){
+                //find distance to node i 
+                int tempDis = (a_cost[node] == 99999)? map[node][i] : a_cost[node] + map[node][i];
+                    
+                //update the total cost to node i if it is shorter than prev cost
+                if (tempDis < a_cost[i] 
+                        && a_unvisited[i] != -1){
+                    a_cost[i] = a_cost[node] + map[node][i];
+                    a_prev[i] = letters[node];
                 }
             }
         }
-        
-        //setup values for next itteration
-        if (y != SIZE - 1){
-            //set prev to cur
-            a_prev[closest] = a_nodes[cur];
-
-            //set weight from cur -> closest
-            a_cost[closest] = map[cur][closest];
-
-            //set cur to closest node
-            cur = closest;
-
-        }
 
     }
 
+    //creating and filling return struct
     struct Vals vals;
     {
         int i;
         for (i=0; i < SIZE; i++){
-            vals.nodes[i] = a_nodes[i];
             vals.prev[i] = a_prev[i];
             vals.cost[i] = a_cost[i];
         }
@@ -97,11 +100,12 @@ int main(void){
     //run dijkstras
     struct Vals printvals = dijkstras(map);
     
-    UINT x;
-    printf("| |  Node  |  Cost  |  Prev  |\n");
+    int x;
+    printf("| |  Node  |  Cost   |  Prev  |\n");
     for (x=0; x < SIZE; x++){
-        printf("|%d|    %c   |    %d   |    %c   |\n", x, printvals.nodes[x], printvals.cost[x], printvals.prev[x]);
+        printf("|%d|    %c   |    %2d   |    %c   |\n", x, letters[x], printvals.cost[x], printvals.prev[x]);
     }
+    return 0;
 }
 
 
