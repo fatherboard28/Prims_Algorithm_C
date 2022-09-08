@@ -1,6 +1,6 @@
 /* 
    Jonathan Cunningham | Sep 1 2022
-   -- dijkstras algorithm --
+   -- prims algorithm --
    Requirments:
     -map to be populated before running
    Restrictions:
@@ -15,12 +15,11 @@ const char letters[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
                       'U', 'V', 'W', 'X', 'Y', 'Z'};
 
 //Adjacency matrix
-int map[6][6] = {{0, 3, 5, 0, 0, 0},
-                 {3, 0, 0, 0, 0, 0},
-                 {5, 0, 0, 7, 4, 0},
-                 {0, 0, 7, 0, 1, 0},
-                 {0, 0, 4, 1, 0, 4},
-                 {0, 0, 0, 0, 4, 0}};
+int map[5][5] = {{0,  4, 13, 1,  0},
+                 {4,  0, 8,  0,  3},
+                 {13, 8, 0,  11, 6},
+                 {1,  0, 11, 0,  2},
+                 {0,  3, 6,  2,  0}};
 
 //Size of data
 const int SIZE = sizeof map[0] / sizeof map[0][0];
@@ -70,12 +69,12 @@ struct Vals dijkstras(int map[SIZE][SIZE]){
         for (i=0; i < SIZE; i++){
             if (map[node][i]){
                 //find distance to node i 
-                int tempDis = (a_cost[node] == 99999)? map[node][i] : a_cost[node] + map[node][i];
+                int tempDis = map[node][i];
                     
-                //update the total cost to node i if it is shorter than prev cost
+                //update the cost to node i if it is shorter than prev cost
                 if (tempDis < a_cost[i] 
                         && a_unvisited[i] != -1){
-                    a_cost[i] = a_cost[node] + map[node][i];
+                    a_cost[i] = map[node][i];
                     a_prev[i] = letters[node];
                 }
             }
