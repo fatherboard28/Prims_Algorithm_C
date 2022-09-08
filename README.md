@@ -1,1 +1,1 @@
-# Dijkstras_Algorithm_C
+# Prims_Algorithm_C
